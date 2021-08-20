@@ -1,14 +1,15 @@
-let myLibrary = [];
+let myLibrary = getStoredBooks();
 const addBookFormContainer = document.querySelector(".form-container");
 const showHideFormButton = document.querySelector("#showHideForm");
 const addBookForm = document.querySelector("#form");
 const cancelButton = document.querySelector(".btn-cancel");
 
-function Book(title, author, numPages, isRead = false) {
+function Book(title, author, numPages, id, isRead = false) {
   this.title = title;
   this.author = author;
   this.numPages = numPages;
   this.isRead = isRead;
+  this.id = id;
 }
 
 Book.prototype.details = function () {
@@ -16,24 +17,51 @@ Book.prototype.details = function () {
     this.isRead ? "read" : "not read yet"
   }.`;
 };
+Book.prototype.toggleIsRead = function () {
+  this.isRead = !this.isRead;
+};
 
-function addBookToLibrary(newBook) {
-  myLibrary.push(newBook);
+function getStoredBooks() {
+  const storedBooks = localStorage.getItem("Books");
+  if (storedBooks) {
+    const booksData = JSON.parse(storedBooks);
+    const books = [];
+    booksData.forEach((book) => {
+      books.push(
+        new Book(book.title, book.author, book.numPages, book.id, book.isRead)
+      );
+    });
+    return books;
+  }
+  return [];
 }
 
-addBookToLibrary(new Book("Sapiens", "Yuval Noah Harari", 297, true));
-addBookToLibrary(new Book("Homo Deus", "Yuval Noah Harari", 316, true));
-addBookToLibrary(
-  new Book("21 Lessons for the 21st Century", "Yuval Noah Harari", 369, true)
-);
-addBookToLibrary(new Book("Computer Networks", "Andrew Tanenbaum", 890, true));
-addBookToLibrary(
-  new Book("Functional Programming", "Eduard Gavrila", 260, false)
-);
+function setStoredBooks(books) {
+  localStorage.setItem("Books", JSON.stringify(books));
+}
+
+function addBookToLocalStorage(book) {
+  const storedBooks = getStoredBooks();
+  storedBooks.push(book);
+  setStoredBooks(storedBooks);
+}
+
+function addBookToLibrary(newBook) {
+  myLibrary.push(
+    new Book(
+      newBook.title,
+      newBook.author,
+      newBook.numPages,
+      newBook.id,
+      newBook.isRead
+    )
+  );
+}
 
 function makeBookCard(book) {
   const card = document.createElement("div");
   card.classList.add("card");
+  card.setAttribute("data-id", book.id);
 
   const title = document.createElement("h2");
   title.innerText = book.title;
@@ -55,6 +83,37 @@ function makeBookCard(book) {
   uList.appendChild(numPages);
   uList.appendChild(isRead);
   card.appendChild(uList);
+  const details = document.createElement("p");
+  details.innerText = book.details();
+  card.appendChild(details);
+
+  const deleteButton = document.createElement("button");
+  deleteButton.innerText = "DELETE";
+
+  deleteButton.addEventListener("click", () => {
+    const cardToDelete = document.querySelector(`[data-id="${book.id}"]`);
+    console.log(cardToDelete);
+    cardToDelete.remove();
+    const updatedLibrary = myLibrary.filter((bookEl) => bookEl.id !== book.id);
+    myLibrary = [...updatedLibrary];
+    setStoredBooks(myLibrary);
+    console.log(updatedLibrary);
+  });
+
+  markAsReadButton = document.createElement("button");
+  markAsReadButton.innerText = book.isRead ? "MARK AS UNREAD" : "MARK AS READ";
+  markAsReadButton.classList.add("toggle-status");
+  markAsReadButton.addEventListener("click", () => {
+    const bookToMark = myLibrary.find((bookEl) => bookEl.id === book.id);
+    bookToMark.toggleIsRead();
+    setStoredBooks(myLibrary);
+    window.location.reload(false);
+  });
+  const buttonsContainer = document.createElement("div");
+  buttonsContainer.appendChild(deleteButton);
+  buttonsContainer.appendChild(markAsReadButton);
+
+  card.appendChild(buttonsContainer);
   return card;
 }
 
@@ -72,13 +131,25 @@ function addBookFormHandler(e) {
   const numPagesInput = document.querySelector("#numPages");
   const isReadCheckbox = document.querySelector("#isRead");
 
-  const newBook = {
+  const newBookData = {
     title: titleInput.value,
     author: authorInput.value,
     numPages: numPagesInput.value,
+    id: Math.random(),
     isRead: isReadCheckbox.checked,
   };
-  addBookToLibrary(newBook);
+
+  const newBook = new Book(
+    newBookData.title,
+    newBookData.author,
+    newBookData.numPages,
+    newBookData.id,
+    newBookData.isRead
+  );
+
+  console.log(newBookData);
+  addBookToLibrary(newBookData);
+  addBookToLocalStorage(newBook);
 
   const newBookCard = makeBookCard(newBook);
   document.body.appendChild(newBookCard);

@@ -56,8 +56,8 @@ h1 {
   background-color: rgb(47, 87, 121);
 }
 
-.btn-cancel{
-    background-color: rgb(145, 95, 4);
+.btn-cancel {
+  background-color: rgb(145, 95, 4);
 }
 
 .btn-cancel:active {
@@ -65,16 +65,49 @@ h1 {
   background-color: rgb(88, 59, 3);
 }
 .card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border: 1px solid purple;
   border-radius: 5px;
   margin: 5px 0;
+  padding-bottom: 1rem;
   overflow: hidden;
 }
 
 h2 {
+  width: 100%;
   text-align: center;
   background-color: purple;
   color: white;
   padding: 0.5rem;
   margin: 0;
+}
+
+.card p {
+  margin: 0 2rem;
+}
+
+.card button {
+  padding: 0.5rem 2rem;
+  margin-top: 1rem;
+  margin-left: 1rem;
+  background-color: rgb(209, 71, 71);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.card button:active {
+  transform: scale(0.98);
+  background-color: rgb(150, 51, 51);
+}
+
+.card button.toggle-status {
+  background-color: cadetblue;
+}
+
+.card button.toggle-status:active {
+  background-color: rgb(66, 109, 110);
 }

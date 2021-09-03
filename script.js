@@ -1,25 +1,29 @@
+class Book {
+  constructor(title, author, numPages, id, isRead = false) {
+    this.title = title;
+    this.author = author;
+    this.numPages = numPages;
+    this.isRead = isRead;
+    this.id = id;
+  }
+  details = () => {
+    return `${this.title} by ${this.author} , ${this.numPages} pages long,  ${
+      this.isRead ? "read" : "not read yet"
+    }.`;
+  };
+  toggleIsRead = () => {
+    this.isRead = !this.isRead;
+  };
+};
+
 let myLibrary = getStoredBooks();
 const addBookFormContainer = document.querySelector(".form-container");
 const showHideFormButton = document.querySelector("#showHideForm");
 const addBookForm = document.querySelector("#form");
 const cancelButton = document.querySelector(".btn-cancel");
 
-function Book(title, author, numPages, id, isRead = false) {
-  this.title = title;
-  this.author = author;
-  this.numPages = numPages;
-  this.isRead = isRead;
-  this.id = id;
-}
 
-Book.prototype.details = function () {
-  return `${this.title} by ${this.author} , ${this.numPages} pages long,  ${
-    this.isRead ? "read" : "not read yet"
-  }.`;
-};
-Book.prototype.toggleIsRead = function () {
-  this.isRead = !this.isRead;
-};
+const aBook = new Book();
 
 function getStoredBooks() {
   const storedBooks = localStorage.getItem("Books");

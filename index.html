@@ -13,11 +13,11 @@
       <form id="form" >
         <h3>Add New Book</h3>
         <label for="title">Title:</label>
-        <input type="text" name="" id="title" />
-        <label for="author">Author:</label>
-        <input type="text" name="" id="author" />
+        <input type="text" name="" id="title" required />
+        <label for="author">Author:</label >
+        <input type="text" name="" id="author" required/>
         <label for="numPages">Number Of Pages:</label>
-        <input type="number" name="" id="numPages" />
+        <input type="number" name="" id="numPages" required />
         <div>
           <label for="isRead">Read:</label>
           <input type="checkbox" name="" id="isRead" />
@@ -28,7 +28,7 @@
         </div>
       </form>
     </div>
-    <button class="btn" id="showHideForm">NEW BOOK</button>
+    <button class="btn add-book-btn" id="showHideForm">NEW BOOK</button>
     <script src="script.js"></script>
   </body>
 </html>
